@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tomato/status_model.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 class MyHomeTomatoPage extends StatefulWidget {
   MyHomeTomatoPage({Key key, this.title}) : super(key: key);
@@ -20,50 +22,67 @@ class MyHomeTomatoPage extends StatefulWidget {
 }
 
 class _MyHomeTomatoPageState extends State<MyHomeTomatoPage> {
-  int _time = 0;
-  bool isRunning = false;
-  void _timeIncrease() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _time++;
-    });
-  }
+  final int MAX_TIME = 1* 60;
+//  int _time = 0;
+//  bool isRunning = false;
+//  void _timeIncrease() {
+//    setState(() {
+//      // This call to setState tells the Flutter framework that something has
+//      // changed in this State, which causes it to rerun the build method below
+//      // so that the display can reflect the updated values. If we changed
+//      // _counter without calling setState(), then the build method would not be
+//      // called again, and so nothing would appear to happen.
+//      _time++;
+//    });
+//    if(_time >= MAX_TIME){
+//      _pause();
+//    }
+//  }
+//
+//  void _start(){
+//    setState(() {
+//      isRunning = true;
+//    });
+//    asyncAwait();
+//  }
+//
+//  void _stop(){
+//    setState(() {
+//      isRunning = false;
+//      _time = 0;
+//    });
+//  }
+//
+//
+//  void _pause(){
+//    setState(() {
+//      isRunning = false;
+//    });
+//  }
 
-  void _start(){
-    isRunning = true;
-    asyncAwait();
-  }
-
-  void _stop(){
-    isRunning = false;
-  }
-
-  Future<void> asyncAwait() async{
-    try{
-      while(isRunning){
-        await Future.delayed(Duration(seconds: 1));
-        _timeIncrease();
-
-      }
-    }catch(e){
-      print('failed: ${e.toString()}');
-    }
-  }
+//  Future<void> asyncAwait() async{
+//    try{
+//      while(isRunning){
+//        await Future.delayed(Duration(seconds: 1));
+//        if(isRunning){
+//          _timeIncrease();
+//
+//        }
+//      }
+//    }catch(e){
+//      print('failed: ${e.toString()}');
+//    }
+//  }
 
 
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+
+//    return ScopedModelDescendant<StatusModel>(
+//      builder: (context,child,model){},
+//    );
+    StatusModel statusModel =  ScopedModel.of<StatusModel>(context,rebuildOnChange: true);
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -74,28 +93,11 @@ class _MyHomeTomatoPageState extends State<MyHomeTomatoPage> {
         // Center is a layout widget. It takes a single child and positions it
         // in the middle of the parent.
         child: Column(
-          // Column is also layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text(
-              '$_time',
-              style: TextStyle(fontSize: 40, color: Colors.black54),
-            ),
+            TimeTextWidget(statusModel.time),
             const SizedBox(height: 30),
-            ControllerLayout(_start,_stop)
+            ControllerLayout()
           ],
         ),
       ),
@@ -103,48 +105,106 @@ class _MyHomeTomatoPageState extends State<MyHomeTomatoPage> {
   }
 }
 
-class ControllerLayout extends StatefulWidget {
-  Function onClickStart;
-  Function onClickStop;
 
-  ControllerLayout(this.onClickStart,this.onClickStop);
+class TimeTextWidget extends StatelessWidget{
+  int _time;
+  TimeTextWidget(this._time);
+
+  String formatTime(int _time){
+    double minute = _time / 60;
+    int second = _time % 60;
+    String strMinute = minute.toStringAsFixed(0);
+    if(strMinute.length == 1){
+      strMinute = "0" + strMinute;
+    }
+    String strSecond = second.toString();
+    if(strSecond.length == 1){
+      strSecond = "0" + strSecond;
+    }
+    return strMinute + ":" + strSecond;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      formatTime(_time),
+      style: TextStyle(fontSize: 40, color: Colors.black54),
+    );
+  }
+
+}
+
+class ControllerLayout extends StatefulWidget {
+//  Function onClickStart;
+//  Function onClickStop;
+//
+//  Function  onClickPause;
+//
+//
+//  ControllerLayout(this.onClickStart,this.onClickStop,this.onClickPause);
 
 
   @override
   State<StatefulWidget> createState() {
-    return new ControllerState(onClickStart,onClickStop);
+    return new ControllerState();
   }
 }
 
 class ControllerState extends State<ControllerLayout> {
 
-  Function  onClickStart;
-  Function  onClickStop;
+//  Function  onClickStart;
+//  Function  onClickStop;
+//  Function  onClickPause;
+//
+//  bool isRunning = false;
 
-  ControllerState(this.onClickStart,this.onClickStop);
+
+//  ControllerState();
 
   @override
   Widget build(BuildContext context) {
+
+    StatusModel statusModel =  ScopedModel.of<StatusModel>(context,rebuildOnChange: true);
+
+    print("ControllerState build " +statusModel.running.toString());
+    Widget leftButton;
+    if (statusModel.running){
+      leftButton =  RaisedButton(
+        onPressed: (){
+
+          statusModel.pauseRun();
+        },
+        color: Colors.red,
+        child: Text(
+          "暂停",
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      );
+
+
+    }else{
+      leftButton =  RaisedButton(
+        onPressed: (){
+          statusModel.startRun();
+        },
+        color: Colors.lightBlue,
+        child: Text(
+          "开始",
+          style: TextStyle(fontSize: 20, color: Colors.white),
+        ),
+      );
+    }
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: <Widget>[
-        RaisedButton(
-          onPressed: (){
-            onClickStart();
-          },
-          color: Colors.red,
-          child: Text(
-            "开始",
-            style: TextStyle(fontSize: 20, color: Colors.white),
-          ),
-        ),
+        leftButton,
         RaisedButton(
           onPressed: () {
-            onClickStop();
+            statusModel.stopRun();
           },
-          color: Colors.red,
+          color: Colors.red[200],
           child: Text(
-            "停止",
+            "重置",
             style: TextStyle(fontSize: 20, color: Colors.white),
           ),
         )
