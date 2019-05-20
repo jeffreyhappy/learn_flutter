@@ -35,13 +35,15 @@ class DbHelper{
    Future<List<TomatoTask>> getList() async{
     Database database = await _getDB();
     List<Map> maps = await database.query(TABLE_NAME,
-      columns: ["id","task_desc","finish_time"]
+      columns: ["id","task_desc","finish_time"],
+        orderBy:"id desc"
     );
+    await database.close();
+
     List<TomatoTask> taskList = List();
     for(int i = 0 ; i < maps.length ; i++){
       taskList.add(TomatoTask.fromMap(maps[i]));
     }
-    await database.close();
     return taskList;
 
   }

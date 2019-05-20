@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class StatusModel extends Model{
-  final int _MAX_TIME = 1* 10;
-//  final int _MAX_TIME = 15* 60;
+//  final int _MAX_TIME = 1* 10;
+  final int _MAX_TIME = 15* 60;
 
   BuildContext _context;
 
