@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_tomato/status_model.dart';
+import 'package:flutter_tomato/task_finish.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'home_tomato.dart';
@@ -13,6 +14,7 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
+    print("MyApp build");
     return  ScopedModel<StatusModel>(
       model: statusModel,
       child:MaterialApp(
@@ -29,6 +31,9 @@ class MyApp extends StatelessWidget {
           // is not restarted.
           primarySwatch: Colors.blue,
         ),
+        routes: {
+          "task_finish":(context)=>TaskFinishWidget(),
+        },
         home: MyHomeTomatoPage(title: '番茄计时器'),
       )
     );

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tomato/database_helper.dart';
 import 'package:flutter_tomato/status_model.dart';
+import 'package:flutter_tomato/tomato_task.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 class MyHomeTomatoPage extends StatefulWidget {
@@ -17,72 +19,25 @@ class MyHomeTomatoPage extends StatefulWidget {
 
   final String title;
 
+
+
   @override
   _MyHomeTomatoPageState createState() => _MyHomeTomatoPageState();
 }
 
 class _MyHomeTomatoPageState extends State<MyHomeTomatoPage> {
-  final int MAX_TIME = 1* 60;
-//  int _time = 0;
-//  bool isRunning = false;
-//  void _timeIncrease() {
-//    setState(() {
-//      // This call to setState tells the Flutter framework that something has
-//      // changed in this State, which causes it to rerun the build method below
-//      // so that the display can reflect the updated values. If we changed
-//      // _counter without calling setState(), then the build method would not be
-//      // called again, and so nothing would appear to happen.
-//      _time++;
-//    });
-//    if(_time >= MAX_TIME){
-//      _pause();
-//    }
-//  }
-//
-//  void _start(){
-//    setState(() {
-//      isRunning = true;
-//    });
-//    asyncAwait();
-//  }
-//
-//  void _stop(){
-//    setState(() {
-//      isRunning = false;
-//      _time = 0;
-//    });
-//  }
-//
-//
-//  void _pause(){
-//    setState(() {
-//      isRunning = false;
-//    });
-//  }
 
-//  Future<void> asyncAwait() async{
-//    try{
-//      while(isRunning){
-//        await Future.delayed(Duration(seconds: 1));
-//        if(isRunning){
-//          _timeIncrease();
-//
-//        }
-//      }
-//    }catch(e){
-//      print('failed: ${e.toString()}');
-//    }
-//  }
 
 
 
   @override
   Widget build(BuildContext context) {
 
-//    return ScopedModelDescendant<StatusModel>(
-//      builder: (context,child,model){},
-//    );
     StatusModel statusModel =  ScopedModel.of<StatusModel>(context,rebuildOnChange: true);
+//    if(statusModel.taskFinish){
+//      Navigator.of(context).pushNamed("task_finish");
+//    }
+    statusModel.setContext(context);
     return Scaffold(
       appBar: AppBar(
         // Here we take the value from the MyHomePage object that was created by
@@ -103,6 +58,56 @@ class _MyHomeTomatoPageState extends State<MyHomeTomatoPage> {
       ),
     );
   }
+
+  @override
+  void initState() {
+    super.initState();
+    DbHelper dbHelper = DbHelper();
+    dbHelper.getList().then((List<TomatoTask> datas){
+      for(int i = 0 ; i < datas.length ; i++){
+        print("dbHelper " + datas[i].time.toString() + " " + datas[i].id.toString() + " " + datas[i].taskDesc );
+        int time = datas[i].time;
+        DateTime dateTime = DateTime.fromMillisecondsSinceEpoch(time);
+        print("time " + time.toString() + " is " + dateTime.year.toString() + " " + dateTime.month.toString() + " " + dateTime.day.toString() + " ");
+      }
+    });
+  }
+
+//  onListResult(List<TomatoTask> datas){
+//
+//  }
+
+
+//  Future<void> _showTaskFinish(BuildContext context) async {
+//    switch (await showDialog<bool>(
+//        context: context,
+//        builder: (BuildContext context) {
+//          return SimpleDialog(
+//            title: const Text('一个任务完成啦'),
+//            children: <Widget>[
+//              SimpleDialogOption(
+//                onPressed: () { Navigator.pop(context, false); },
+//                child: const Text('取消'),
+//              ),
+//              SimpleDialogOption(
+//                onPressed: () { Navigator.pop(context, true); },
+//                child: const Text('确认'),
+//              ),
+//            ],
+//          );
+//        }
+//    )) {
+//      case false:
+//      // Let's go.
+//      // ...
+//        print("click cancel");
+//        break;
+//      case true:
+//      // ...
+//        print("click ok");
+//        break;
+//    }
+//  }
 }
 
 
@@ -113,11 +118,11 @@ class TimeTextWidget extends StatelessWidget{
   String formatTime(int _time){
     double minute = _time / 60;
     int second = _time % 60;
-    String strMinute = minute.toStringAsFixed(0);
+    String strMinute = minute.toInt().toString();
     if(strMinute.length == 1){
       strMinute = "0" + strMinute;
     }
-    String strSecond = second.toString();
+    String strSecond = second.toInt().toString();
     if(strSecond.length == 1){
       strSecond = "0" + strSecond;
     }
@@ -135,13 +140,7 @@ class TimeTextWidget extends StatelessWidget{
 }
 
 class ControllerLayout extends StatefulWidget {
-//  Function onClickStart;
-//  Function onClickStop;
-//
-//  Function  onClickPause;
-//
-//
-//  ControllerLayout(this.onClickStart,this.onClickStop,this.onClickPause);
+
 
 
   @override
@@ -152,14 +151,7 @@ class ControllerLayout extends StatefulWidget {
 
 class ControllerState extends State<ControllerLayout> {
 
-//  Function  onClickStart;
-//  Function  onClickStop;
-//  Function  onClickPause;
-//
-//  bool isRunning = false;
 
-
-//  ControllerState();
 
   @override
   Widget build(BuildContext context) {
