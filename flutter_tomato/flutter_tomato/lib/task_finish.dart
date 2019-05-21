@@ -42,7 +42,7 @@ class TaskFinishWidget extends StatelessWidget{
               onPressed: (){
                 DbHelper dbHelper = DbHelper();
                 dbHelper.insert(strDesc);
-                Navigator.pop(context);
+                Navigator.pop(context,);
               },
               color: Colors.blue,
               padding: EdgeInsets.only(left: 10,right: 10,top: 5,bottom: 5),

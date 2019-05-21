@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_tomato/database_helper.dart';
 import 'package:flutter_tomato/status_model.dart';
 import 'package:flutter_tomato/task_finish.dart';
 import 'package:scoped_model/scoped_model.dart';
@@ -12,6 +13,7 @@ void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
+//  DbHelper dbHelper = DbHelper();
   @override
   Widget build(BuildContext context) {
     print("MyApp build");
